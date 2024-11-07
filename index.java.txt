@@ -1,0 +1,105 @@
+import java.util.Scanner;
+
+class ATM {
+    float balance = 0;
+    int pin = 1304;
+    String trans = "";
+    
+    // Create a single Scanner object for input
+    Scanner sc = new Scanner(System.in);
+    
+    // Max allowed attempts for incorrect PIN
+    int maxAttempts = 3;
+    int attemptCount = 0;
+
+    // Method to check the PIN
+    public void checkpin() {
+        while (attemptCount < maxAttempts) {
+            System.out.println("ENTER YOUR PIN: ");
+            int enterpin = sc.nextInt();
+            if (enterpin == pin) {
+                menu(); // If PIN is correct, show the menu
+                return; // Exit method after showing menu
+            } else {
+                attemptCount++;
+                System.out.println("INVALID PIN! You have " + (maxAttempts - attemptCount) + " attempt(s) left.");
+            }
+        }
+        System.out.println("You have entered the wrong PIN " + maxAttempts + " times. Account locked.");
+        System.exit(0); // Exit the program after too many failed attempts
+    }
+
+    // Method to show the menu and perform operations
+    public void menu() {
+        System.out.println("ENTER YOUR CHOICE: \n 1 - Check Account Balance \n 2 - Deposit Money \n 3 - Withdraw Money \n 4 - Mini Statement \n 5 - Exit");
+        int opt = sc.nextInt();
+        switch(opt) {
+            case 1: checkbalance(); break;
+            case 2: deposit(); break;
+            case 3: withdraw(); break;
+            case 4: transhis(); break;
+            case 5: 
+                System.out.println("THANK YOU!!! PLEASE VISIT AGAIN");
+                System.exit(0); // Exit the program
+                break;
+            default:
+                System.out.println("ENTER A VALID CHOICE !!!");
+                menu(); // Prompt for choice again if invalid
+        }
+    }
+
+    // Method to check balance
+    public void checkbalance() {
+        System.out.println("YOUR BALANCE: " + balance + " Rs");
+        menu(); // Return to menu after displaying balance
+    }
+
+    // Method to deposit money
+    public void deposit() {
+        System.out.println("ENTER AMOUNT TO DEPOSIT: ");
+        float amount = sc.nextFloat();
+        if (amount <= 0) {
+            System.out.println("AMOUNT MUST BE GREATER THAN ZERO!");
+        } else {
+            balance += amount;
+            System.out.println("MONEY DEPOSITED SUCCESSFULLY!!!");
+            System.out.println("CURRENT BALANCE: " + balance + " Rs");
+            String str = amount + " Rs has been Credited\n";
+            trans = trans.concat(str); // Add transaction to history
+        }
+        menu(); // Return to menu after deposit
+    }
+
+    // Method to withdraw money
+    public void withdraw() {
+        System.out.println("ENTER AMOUNT TO WITHDRAW: ");
+        float amount = sc.nextFloat();
+        if (amount > balance) {
+            System.out.println("INSUFFICIENT BALANCE !!!");
+        } else {
+            balance -= amount;
+            System.out.println("MONEY WITHDRAWN SUCCESSFULLY!!!");
+            System.out.println("CURRENT BALANCE: " + balance + " Rs");
+            String str = amount + " Rs has been Debited\n";
+            trans = trans.concat(str); // Add transaction to history
+        }
+        menu(); // Return to menu after withdrawal
+    }
+
+    // Method to display transaction history
+    public void transhis() {
+        if (trans.isEmpty()) {
+            System.out.println("NO TRANSACTIONS OCCURRED!!!");
+        } else {
+            System.out.println("\n" + trans);
+        }
+        menu(); // Return to menu after displaying transactions
+    }
+}
+
+public class Atm_machine {
+    public static void main(String[] args) {
+        ATM obj = new ATM();
+        obj.checkpin(); // Start the program by checking the PIN
+    }
+}
